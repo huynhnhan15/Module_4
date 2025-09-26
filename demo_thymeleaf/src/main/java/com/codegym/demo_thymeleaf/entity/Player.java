@@ -1,5 +1,15 @@
 package com.codegym.demo_thymeleaf.entity;
+
+
+import javax.persistence.*;
+
+@Entity
+@Table(name = "player")
 public class Player {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private int id;
     private String name;
     private String birthday;
@@ -9,17 +19,6 @@ public class Player {
 
     public Player() {
     }
-
-    public Player(int id, String name, String birthday, int experience, String position, String avatar) {
-        this.id = id;
-        this.name = name;
-        this.birthday = birthday;
-        this.experience = experience;
-        this.position = position;
-        this.avatar = avatar;
-    }
-
-    // getter & setter
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 

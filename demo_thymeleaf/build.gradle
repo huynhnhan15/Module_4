@@ -22,20 +22,26 @@ tasks.withType(JavaCompile) {
 }
 
 dependencies {
-    providedCompile 'javax.servlet:javax.servlet-api:4.0.1'
+    // Servlet API (javax.*)
+    compileOnly 'javax.servlet:javax.servlet-api:4.0.1'
 
+    // Spring MVC 5
+    implementation 'org.springframework:spring-webmvc:5.3.23'
 
-    // https://mvnrepository.com/artifact/org.springframework/spring-webmvc
-    implementation group: 'org.springframework', name: 'spring-webmvc', version: '5.3.23'
+    // Thymeleaf + Spring5 integration
+    implementation 'org.thymeleaf:thymeleaf-spring5:3.1.1.RELEASE'
+    implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.1.0'
 
-    // https://mvnrepository.com/artifact/org.thymeleaf/thymeleaf-spring5
-    implementation group: 'org.thymeleaf', name: 'thymeleaf-spring5', version: '3.1.1.RELEASE'
-    // https://mvnrepository.com/artifact/nz.net.ultraq.thymeleaf/thymeleaf-layout-dialect
-    implementation group: 'nz.net.ultraq.thymeleaf', name: 'thymeleaf-layout-dialect', version: '3.1.0'
+    // Hibernate 5 (javax.persistence.*)
+    implementation 'org.hibernate:hibernate-core:5.6.15.Final'
+    implementation 'javax.persistence:javax.persistence-api:2.2'
 
-    testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
+    // MySQL driver
+    implementation 'mysql:mysql-connector-java:8.0.28'
 
+    // JUnit 5
+    testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
 }
 
 test {

@@ -28,12 +28,12 @@ public class PlayerController {
         return "/player/add";
     }
     @PostMapping("/add")
-    public String save(@ModelAttribute Player player,
-                       RedirectAttributes redirectAttributes) {
+    public String save(@ModelAttribute Player player, RedirectAttributes redirect) {
         playerService.add(player);
-        redirectAttributes.addFlashAttribute("mess", "Thêm mới thành công!");
+        redirect.addFlashAttribute("mess", "Thêm mới thành công!");
         return "redirect:/players";
     }
+
 
     @GetMapping("/detail")
     public String detail(@RequestParam(name = "id", defaultValue = "10") int id, Model model) {
