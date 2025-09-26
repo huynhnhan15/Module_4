@@ -5,6 +5,7 @@ import com.codegym.demo_thymeleaf.entity.Player;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -28,6 +29,8 @@ public class    PlayerRepository implements IPlayerRepository {
         return player;
     }
     @Override
+    @Transactional
+
     public boolean add(Player player) {
         try{
             entityManager.persist(player);
