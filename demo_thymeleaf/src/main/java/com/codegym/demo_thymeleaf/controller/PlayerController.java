@@ -9,17 +9,24 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Arrays;
+import java.util.List;
+
 @Controller
 @RequestMapping("/players")
 public class PlayerController {
+    @ModelAttribute("subjects")
+    public List<String> getSubjects(){
+        return Arrays.asList("JAVA", "PHP","SQL");
+    }
     @Autowired
     private IPlayerService playerService;
 
     @GetMapping("")
     public ModelAndView showList() {
-        ModelAndView mav = new ModelAndView("/player/list");
-        mav.addObject("playerList", playerService.findAll());
-        return mav;
+        ModelAndView modelAndView  = new ModelAndView("/player/list");
+        modelAndView .addObject("playerList", playerService.findAll());
+        return modelAndView ;
     }
 
     @GetMapping("/add")
@@ -28,22 +35,24 @@ public class PlayerController {
         return "/player/add";
     }
     @PostMapping("/add")
-    public String save(@ModelAttribute Player player, RedirectAttributes redirect) {
+    public String save(@ModelAttribute(name = "player") Player player, RedirectAttributes redirectAttributes) {
         playerService.add(player);
-        redirect.addFlashAttribute("mess", "Thêm mới thành công!");
+        redirectAttributes.addFlashAttribute("mess","add thành công");
         return "redirect:/players";
     }
 
 
     @GetMapping("/detail")
-    public String detail(@RequestParam(name = "id", defaultValue = "10") int id, Model model) {
+    public String detail(@RequestParam(name = "id", defaultValue = "3") int id, Model model) {
         Player player = playerService.findById(id);
         model.addAttribute("player", player);
         return "/player/detail";
     }
 
     @GetMapping("/detail/{id}")
-    public String detail2(@PathVariable int id, Model model) {
+    public String detail2(@PathVariable(name = "id")int id,
+                          Model model
+    ){
         Player player = playerService.findById(id);
         model.addAttribute("player", player);
         return "/player/detail";

@@ -1,10 +1,10 @@
 package com.codegym.demo_thymeleaf.entity;
 
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
-@Table(name = "player")
+
 public class Player {
 
     @Id
@@ -16,6 +16,15 @@ public class Player {
     private int experience;
     private String position;
     private String avatar;
+
+    public Player(String avatar, String birthday, int experience, int id, String name, String position) {
+        this.avatar = avatar;
+        this.birthday = birthday;
+        this.experience = experience;
+        this.id = id;
+        this.name = name;
+        this.position = position;
+    }
 
     public Player() {
     }

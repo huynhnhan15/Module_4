@@ -3,7 +3,7 @@ plugins {
     id 'war'
 }
 
-group 'com.codegym'
+group 'org.example'
 version '1.0-SNAPSHOT'
 
 repositories {
@@ -11,7 +11,7 @@ repositories {
 }
 
 ext {
-    junitVersion = '5.11.0'
+    junitVersion = '5.10.2'
 }
 
 sourceCompatibility = '17'
@@ -22,26 +22,21 @@ tasks.withType(JavaCompile) {
 }
 
 dependencies {
-    // Servlet API (javax.*)
-    compileOnly 'javax.servlet:javax.servlet-api:4.0.1'
+    compileOnly('jakarta.servlet:jakarta.servlet-api:5.0.0')
+    // Spring MVC
+    implementation "org.springframework:spring-webmvc:6.2.10"
 
-    // Spring MVC 5
-    implementation 'org.springframework:spring-webmvc:5.3.23'
+    // Thymeleaf 6 + Spring integration
+    implementation "org.thymeleaf:thymeleaf-spring6:3.1.2.RELEASE"
+    implementation "org.thymeleaf.extras:thymeleaf-extras-java8time:3.0.4.RELEASE"
 
-    // Thymeleaf + Spring5 integration
-    implementation 'org.thymeleaf:thymeleaf-spring5:3.1.1.RELEASE'
-    implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.1.0'
+    implementation 'org.hibernate.orm:hibernate-core:6.4.4.Final'
+    implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.28'
 
-    // Hibernate 5 (javax.persistence.*)
-    implementation 'org.hibernate:hibernate-core:5.6.15.Final'
-    implementation 'javax.persistence:javax.persistence-api:2.2'
+    implementation group: 'org.springframework.data', name: 'spring-data-jpa', version: '3.3.0'
 
-    // MySQL driver
-    implementation 'mysql:mysql-connector-java:8.0.28'
-
-    // JUnit 5
-    testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
+    testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
 }
 
 test {

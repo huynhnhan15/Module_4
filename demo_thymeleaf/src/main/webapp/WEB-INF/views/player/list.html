@@ -8,9 +8,10 @@
 </head>
 <body class="container mt-3">
 <div th:replace="~{/layout/layout::header}"></div>
-<h1 class="mb-3">Danh sách cầu thủ</h1>
 
+<a href="/players/add" class="btn btn-success mb-3">Thêm cầu thủ</a>
 <a th:href="@{/players/add}" class="btn btn-success mb-3">Thêm cầu thủ</a>
+
 <p class="text-success" th:text="${mess}"></p>
 
 <table class="table table-bordered table-striped">
@@ -23,8 +24,8 @@
         <th>Kinh nghiệm</th>
         <th>Vị trí</th>
         <th>Ảnh đại diện</th>
-        <th>Detail1</th>
-        <th>Detail2</th>
+        <th>RP-Detail</th>
+        <th>PV-Detail</th>
     </tr>
     </thead>
     <tbody>
@@ -38,16 +39,12 @@
         <td>
             <img th:src="${player.avatar}" alt="avatar" width="80" height="80"/>
         </td>
-
         <td>
-            <a th:href="@{/players/detail(id=${player.id})}" class="btn btn-primary btn-sm">Detail1</a>
+            <a th:href="@{/players/detail(id=${player.id})}" class="btn btn-primary btn-sm">Detail</a>
         </td>
         <td>
-            <a th:href="@{/players/detail/{id}(id=${player.id})}" class="btn btn-secondary btn-sm">Detail2</a>
+            <a th:href="@{/players/detail/__${player.id}__}" class="btn btn-secondary btn-sm">Detail</a>
         </td>
-    </tr>
-    <tr th:if="${playerList.isEmpty()}">
-        <td colspan="9" class="text-center text-muted">Danh sách trống</td>
     </tr>
     </tbody>
 </table>
