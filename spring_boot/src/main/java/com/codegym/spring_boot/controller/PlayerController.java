@@ -22,6 +22,9 @@ public class PlayerController {
     @Autowired
     private IPlayerService playerService;
 
+
+
+
     @GetMapping("")
     public ModelAndView showList() {
         ModelAndView modelAndView  = new ModelAndView("/player/list");
@@ -31,12 +34,14 @@ public class PlayerController {
 
     @GetMapping("/add")
     public String showFormAdd(Model model) {
+
         model.addAttribute("player", new Player());
         return "/player/add";
     }
     @PostMapping("/add")
     public String save(@ModelAttribute(name = "player") Player player, RedirectAttributes redirectAttributes) {
         playerService.add(player);
+
         redirectAttributes.addFlashAttribute("mess","add thành công");
         return "redirect:/players";
     }

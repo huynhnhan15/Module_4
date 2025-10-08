@@ -1,29 +1,24 @@
 package com.codegym.spring_boot.entity;
 
-
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Player {
+@Entity(name = "doi_tuyen")
+public class DoiTuyen {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
     private int id;
     private String name;
-    private String birthday;
-    private int experience;
-    private String position;
-    private String avatar;
-    @ManyToOne
-    @JoinColumn(name = "class_id")
-    private DoiTuyen doiTuyen;
 }

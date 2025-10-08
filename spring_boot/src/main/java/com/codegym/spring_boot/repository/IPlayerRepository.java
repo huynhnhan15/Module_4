@@ -10,7 +10,6 @@ import java.util.List;
 
 public interface IPlayerRepository extends JpaRepository<Player, Integer> {
     List<Player> findAllByNameContaining(String name);
-
     @Query(value = "SELECT * FROM student where name like :searchName ;",nativeQuery = true)
     List<Player> findByName1(@Param("searchName") String name);
 }
