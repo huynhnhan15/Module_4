@@ -1,71 +1,68 @@
 package com.codegym.spring_boot.controller;
 
+import com.codegym.spring_boot.dto.PlayerDto;
+import com.codegym.spring_boot.entity.DoiTuyen;
 import com.codegym.spring_boot.entity.Player;
 import com.codegym.spring_boot.service.IPlayerService;
+import com.codegym.spring_boot.validation.PlayerValidate;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.Arrays;
-import java.util.List;
 
 @Controller
 @RequestMapping("/players")
 public class PlayerController {
-    @ModelAttribute("subjects")
-    public List<String> getSubjects(){
-        return Arrays.asList("JAVA", "PHP","SQL");
-    }
+
     @Autowired
     private IPlayerService playerService;
 
-
-
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        binder.addValidators(new PlayerValidate());
+    }
 
     @GetMapping("")
-    public ModelAndView showList() {
-        ModelAndView modelAndView  = new ModelAndView("/player/list");
-        modelAndView .addObject("playerList", playerService.findAll());
-        return modelAndView ;
+    public String showList(Model model) {
+        model.addAttribute("playerList", playerService.findAll());
+        return "/player/list";
     }
 
     @GetMapping("/add")
     public String showFormAdd(Model model) {
-
-        model.addAttribute("player", new Player());
+        model.addAttribute("playerDto", new PlayerDto());
+        // load danh sách đội tuyển nếu có
         return "/player/add";
     }
+
     @PostMapping("/add")
-    public String save(@ModelAttribute(name = "player") Player player, RedirectAttributes redirectAttributes) {
+    public String save(@ModelAttribute("playerDto") PlayerDto playerDto,
+                       BindingResult bindingResult,
+                       RedirectAttributes redirectAttributes) {
+
+        new PlayerValidate().validate(playerDto, bindingResult);
+
+        if (bindingResult.hasErrors()) {
+            return "/player/add";
+        }
+
+        Player player = new Player();
+        BeanUtils.copyProperties(playerDto, player);
         playerService.add(player);
 
-        redirectAttributes.addFlashAttribute("mess","add thành công");
+        redirectAttributes.addFlashAttribute("mess", "Thêm thành công");
         return "redirect:/players";
     }
 
-
-    @GetMapping("/detail")
-    public String detail(@RequestParam(name = "id", defaultValue = "3") int id, Model model) {
-        Player player = playerService.findById(id);
-        model.addAttribute("player", player);
-        return "/player/detail";
-    }
-    @GetMapping(value = "/search")
-    public ModelAndView search(@RequestParam(name = "searchName") String searchName){
-        ModelAndView modelAndView = new ModelAndView("/player/list");
-        modelAndView.addObject("playerList", playerService.searchByName(searchName));
-        return modelAndView;
-    }
     @GetMapping("/detail/{id}")
-    public String detail2(@PathVariable(name = "id")int id,
-                          Model model
-    ){
+    public String detail(@PathVariable int id, Model model) {
         Player player = playerService.findById(id);
         model.addAttribute("player", player);
         return "/player/detail";
     }
-
 }

@@ -7,29 +7,45 @@
 </head>
 <body class="container mt-3">
 <h2>Thêm cầu thủ</h2>
-<form th:action="@{/players/add}" th:object="${player}" method="post" class="form">
+
+<form th:action="@{/players/add}" th:object="${playerDto}" method="post" class="form">
     <div class="mb-3">
         <label class="form-label">Họ và tên</label>
-        <input type="text" th:field="*{name}" class="form-control" required>
+        <input type="text" th:field="*{name}" class="form-control">
+        <p class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
     </div>
+
     <div class="mb-3">
         <label class="form-label">Ngày sinh</label>
-        <input type="date" th:field="*{birthday}" class="form-control" required>
+        <input type="date" th:field="*{birthday}" class="form-control">
+        <p class="text-danger" th:if="${#fields.hasErrors('birthday')}" th:errors="*{birthday}"></p>
     </div>
+
     <div class="mb-3">
         <label class="form-label">Kinh nghiệm (năm)</label>
         <input type="number" th:field="*{experience}" class="form-control">
+        <p class="text-danger" th:if="${#fields.hasErrors('experience')}" th:errors="*{experience}"></p>
     </div>
+
     <div class="mb-3">
         <label class="form-label">Vị trí</label>
         <input type="text" th:field="*{position}" class="form-control">
+        <p class="text-danger" th:if="${#fields.hasErrors('position')}" th:errors="*{position}"></p>
     </div>
+
     <div class="mb-3">
         <label class="form-label">Ảnh đại diện (URL)</label>
         <input type="text" th:field="*{avatar}" class="form-control">
+        <p class="text-danger" th:if="${#fields.hasErrors('avatar')}" th:errors="*{avatar}"></p>
     </div>
-    <button class="btn btn-success">Lưu</button>
 
+    <div class="mb-3">
+        <label class="form-label">Đội tuyển</label>
+        <input type="number" th:field="*{doiTuyenId}" class="form-control" placeholder="Nhập ID đội tuyển">
+        <p class="text-danger" th:if="${#fields.hasErrors('doiTuyenId')}" th:errors="*{doiTuyenId}"></p>
+    </div>
+
+    <button class="btn btn-success">Lưu</button>
 </form>
 </body>
 </html>
