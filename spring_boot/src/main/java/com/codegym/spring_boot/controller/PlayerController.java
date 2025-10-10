@@ -14,6 +14,8 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
+
 
 @Controller
 @RequestMapping("/players")
@@ -36,7 +38,6 @@ public class PlayerController {
     @GetMapping("/add")
     public String showFormAdd(Model model) {
         model.addAttribute("playerDto", new PlayerDto());
-        // load danh sách đội tuyển nếu có
         return "/player/add";
     }
 
@@ -64,5 +65,11 @@ public class PlayerController {
         Player player = playerService.findById(id);
         model.addAttribute("player", player);
         return "/player/detail";
+    }
+    @GetMapping("/search")
+    public String search(@RequestParam("searchName") String searchName, Model model) {
+        List<Player> playerList = playerService.searchByName(searchName);
+        model.addAttribute("playerList", playerList);
+        return "/player/list";
     }
 }
