@@ -1,6 +1,5 @@
 package com.codegym.spring_boot.service;
 
-
 import com.codegym.spring_boot.entity.Player;
 import com.codegym.spring_boot.repository.IPlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,19 +19,21 @@ public class PlayerService implements IPlayerService {
 
     @Override
     public Player findById(int id) {
-
-return playerRepository.findById(id).get();
+        return playerRepository.findById(id).orElse(null);
     }
 
     @Override
     public boolean add(Player player) {
-
-    return playerRepository.save(player) == null;
+        try {
+            playerRepository.save(player);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override
     public List<Player> searchByName(String name) {
         return playerRepository.findAllByNameContaining(name);
     }
-
 }

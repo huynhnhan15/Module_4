@@ -9,6 +9,22 @@
 <body class="container mt-3">
 <div th:replace="~{/layout/layout::header}"></div>
 
+<div th:if="${lastViewedPlayer != null}" class="alert alert-info">
+    <strong>Cầu thủ xem gần nhất:</strong>
+    <img th:src="${lastViewedPlayer.avatar}" alt="avatar" width="50" height="50"
+         style="border-radius: 50%; margin: 0 10px;"/>
+    <span th:text="${lastViewedPlayer.name}"></span>
+</div>
+<div th:if="${searchHistory != null && !searchHistory.isEmpty()}" class="alert alert-warning">
+    <strong> Lịch sử tìm kiếm:</strong>
+    <span th:each="keyword, stat : ${searchHistory}">
+        <a th:href="@{/players/search(searchName=${keyword})}"
+           class="badge bg-secondary text-decoration-none"
+           th:text="${keyword}"></a>
+        <span th:if="!${stat.last}">, </span>
+    </span>
+</div>
+
 <a href="/players/add" class="btn btn-success mb-3">Thêm cầu thủ</a>
 <a th:href="@{/players/add}" class="btn btn-success mb-3">Thêm cầu thủ</a>
 <form action="/players/search" method="get">
