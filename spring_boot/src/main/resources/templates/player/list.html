@@ -2,22 +2,31 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Danh sách cầu thủ (API)</title>
+    <title>Quản lý cầu thủ (AJAX API)</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
 <body class="container mt-4">
-<h1 class="mb-4">Danh sách cầu thủ</h1>
 
+<h1 class="mb-4">Quản lý cầu thủ (AJAX)</h1>
+
+<h4>Thêm cầu thủ mới</h4>
+<form id="addForm" class="mb-4">
+    <input id="name" class="form-control mb-2" placeholder="Tên cầu thủ" required>
+    <input id="birthday" class="form-control mb-2" placeholder="Ngày sinh">
+    <input id="experience" class="form-control mb-2" placeholder="Kinh nghiệm">
+    <input id="position" class="form-control mb-2" placeholder="Vị trí">
+    <input id="avatar" class="form-control mb-2" placeholder="Link ảnh đại diện">
+    <button type="submit" class="btn btn-success">Thêm mới</button>
+</form>
+<a href="/players/add" class="btn btn-success mb-3">+ Thêm cầu thủ</a>
 <form id="searchForm" class="d-flex mb-3">
     <input id="searchInput" class="form-control me-2" placeholder="Nhập tên cầu thủ...">
     <button class="btn btn-primary" type="submit">Tìm kiếm</button>
 </form>
 
-<a href="/players/add" class="btn btn-success mb-3">+ Thêm cầu thủ (trang cũ)</a>
-
 <div id="message" class="alert alert-success d-none"></div>
 
-<!-- Bảng hiển thị -->
+
 <table class="table table-bordered table-striped">
     <thead class="table-dark">
     <tr>
@@ -31,8 +40,7 @@
         <th>Hành động</th>
     </tr>
     </thead>
-    <tbody id="playerTableBody">
-    </tbody>
+    <tbody id="playerTableBody"></tbody>
 </table>
 
 <script>
@@ -64,11 +72,8 @@
                     <td>${p.birthday || ''}</td>
                     <td>${p.experience || ''}</td>
                     <td>${p.position || ''}</td>
+                    <td><img src="${p.avatar || ''}" width="80" height="80"/></td>
                     <td>
-                        <img src="${p.avatar || ''}" alt="avatar" width="80" height="80"/>
-                    </td>
-                    <td>
-                        <a href="/players/detail/${p.id}" class="btn btn-primary btn-sm">Xem chi tiết</a>
                         <button class="btn btn-danger btn-sm" onclick="deletePlayer(${p.id})">Xóa</button>
                     </td>
                 `;
@@ -76,12 +81,50 @@
         });
     }
 
-
-
     searchForm.addEventListener('submit', (e) => {
         e.preventDefault();
         loadPlayers(searchInput.value);
     });
+
+    document.getElementById('addForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const player = {
+            name: document.getElementById('name').value,
+            birthday: document.getElementById('birthday').value,
+            experience: document.getElementById('experience').value,
+            position: document.getElementById('position').value,
+            avatar: document.getElementById('avatar').value
+        };
+
+        const res = await fetch(API_BASE, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(player)
+        });
+
+        if (res.ok) {
+            showMessage(' Thêm cầu thủ thành công!');
+            e.target.reset();
+            loadPlayers();
+        } else {
+            const errors = await res.json();
+            console.log(errors);
+            showMessage(' Có lỗi khi thêm cầu thủ!');
+        }
+    });
+
+    async function deletePlayer(id) {
+        if (!confirm('Bạn có chắc muốn xóa cầu thủ này?')) return;
+
+        const res = await fetch(`${API_BASE}/${id}`, { method: 'DELETE' });
+        if (res.ok) {
+            showMessage('Xóa thành công!');
+            loadPlayers();
+        } else {
+            showMessage(' Xóa thất bại!');
+        }
+    }
+
 
     function showMessage(text) {
         messageBox.textContent = text;
