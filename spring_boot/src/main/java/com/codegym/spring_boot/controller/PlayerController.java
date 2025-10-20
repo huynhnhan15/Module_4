@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.ArrayList;
 import java.util.List;
-
 
 @Controller
 @RequestMapping("/players")
@@ -31,33 +31,29 @@ public class PlayerController {
                            @CookieValue(value = "visitCount", defaultValue = "0") String visitCount,
                            HttpServletResponse response) {
 
-
         int count = Integer.parseInt(visitCount) + 1;
         Cookie visitCookie = new Cookie("visitCount", String.valueOf(count));
-        visitCookie.setMaxAge(60 * 60 * 24  );
+        visitCookie.setMaxAge(60 * 60 * 24);
         visitCookie.setPath("/");
         response.addCookie(visitCookie);
 
         model.addAttribute("visitCount", count);
-
         model.addAttribute("playerList", playerService.findAll());
 
         if (!model.containsAttribute("lastViewedPlayer")) {
             model.addAttribute("lastViewedPlayer", null);
         }
-
-
         if (!model.containsAttribute("searchHistory")) {
-            model.addAttribute("searchHistory", new java.util.ArrayList<String>());
+            model.addAttribute("searchHistory", new ArrayList<String>());
         }
 
-        return "/player/list";
+        return "player/list";
     }
 
     @GetMapping("/add")
     public String showFormAdd(Model model) {
         model.addAttribute("playerDto", new PlayerDto());
-        return "/player/add";
+        return "player/add";
     }
 
     @PostMapping("/add")
@@ -66,40 +62,33 @@ public class PlayerController {
                        RedirectAttributes redirectAttributes) {
 
         new PlayerValidate().validate(playerDto, bindingResult);
-
         if (bindingResult.hasErrors()) {
-            return "/player/add";
+            return "player/add";
         }
 
         Player player = new Player();
         BeanUtils.copyProperties(playerDto, player);
         playerService.add(player);
 
-        redirectAttributes.addFlashAttribute("mess", "Thêm thành công");
+        redirectAttributes.addFlashAttribute("mess", "Thêm mới cầu thủ thành công!");
         return "redirect:/players";
     }
 
     @GetMapping("/detail/{id}")
     public String detail(@PathVariable int id, Model model) {
         Player player = playerService.findById(id);
-
         if (player == null) {
             return "redirect:/players";
         }
 
         model.addAttribute("player", player);
 
-        PlayerDto lastViewed = new PlayerDto();
-        lastViewed.setId(player.getId());
-        lastViewed.setName(player.getName());
-        lastViewed.setAvatar(player.getAvatar());
-        lastViewed.setBirthday(player.getBirthday());
-        lastViewed.setPosition(player.getPosition());
-        lastViewed.setExperience(player.getExperience());
 
+        PlayerDto lastViewed = new PlayerDto();
+        BeanUtils.copyProperties(player, lastViewed);
         model.addAttribute("lastViewedPlayer", lastViewed);
 
-        return "/player/detail";
+        return "player/detail";
     }
 
     @GetMapping("/search")
@@ -109,9 +98,8 @@ public class PlayerController {
 
         @SuppressWarnings("unchecked")
         List<String> searchHistory = (List<String>) model.getAttribute("searchHistory");
-
         if (searchHistory == null) {
-            searchHistory = new java.util.ArrayList<>();
+            searchHistory = new ArrayList<>();
         }
 
         if (!searchName.trim().isEmpty() && !searchHistory.contains(searchName)) {
@@ -122,15 +110,13 @@ public class PlayerController {
         }
 
         model.addAttribute("searchHistory", searchHistory);
-
-        return "/player/list";
+        return "player/list";
     }
 
-    // Xóa Session
     @GetMapping("/clearSession")
     public String clearSession(SessionStatus sessionStatus, RedirectAttributes redirectAttributes) {
-        sessionStatus.setComplete(); // Xóa tất cả SessionAttributes
-        redirectAttributes.addFlashAttribute("mess", "Đã xóa Session");
+        sessionStatus.setComplete();
+        redirectAttributes.addFlashAttribute("mess", "Đã xóa Session thành công!");
         return "redirect:/players";
     }
 }
